@@ -8,4 +8,5 @@ module.exports = {
   queueName: 'message_queue',
   delayedSetName: 'delayed_set',
   acquireTimeoutMS: 10,
+  expireMS: 6,
 };
