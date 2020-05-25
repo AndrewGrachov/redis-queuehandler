@@ -2,7 +2,7 @@ const config = require('config');
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 
-const messageService = require('./service/messageService');
+const { MessageService } = require('./service/messageService');
 
 const app = new Koa();
 
@@ -12,9 +12,9 @@ app.use(async (ctx) => {
     method,
     request: { path },
   } = ctx;
-  if (method === 'GET' && path === '/echoAtTime') {
-    // const { time, message } = ctx.body;
-    const { time = Date.now() + 2000, message } = ctx.query;
+  if (method === 'POST' && path === '/echoAtTime') {
+    console.log('handle!!');
+    const { time, message } = ctx.request.body;
     await messageService.postMessage({ time, message });
 
     ctx.status = 201;
@@ -22,7 +22,10 @@ app.use(async (ctx) => {
   }
 });
 
+const messageService = new MessageService();
+
 messageService.initPolling();
+messageService.initBlockingPoll();
 console.log('Started to poll queue');
 
 app.listen(config.port);

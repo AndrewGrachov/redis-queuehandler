@@ -1,43 +1,56 @@
 const config = require('config');
-const redis = require('../db/redis');
+const { queueName, delayedSetName } = config;
+const { Redis } = require('../db/redis');
 
 function defaultHandler(msg) {
   console.log(msg);
 }
 
 class MessageService {
-  initPolling(handler = defaultHandler) {
-    this.shouldPoll = true;
-    this.poll(handler);
+  constructor() {
+    this.pollingClient = new Redis({ queueName, delayedSetName });
   }
 
-  poll(handler) {
+  initPolling() {
+    this.shouldPoll = true;
+    this.poll();
+  }
+
+  async initBlockingPoll(handler = defaultHandler) {
+    this.blockingClient = new Redis({ queueName, delayedSetName });
+    this.blockingPoll(handler);
+  }
+
+  async blockingPoll(handler) {
+    const messages = await this.blockingClient.blpop(1);
+    if (messages && messages.length) {
+      handler(messages[1]);
+    }
+    this.blockingPoll(handler);
+  }
+
+  poll() {
     setTimeout(async () => {
       // TODO: error handling
-      const message = await redis.getMessage();
+      const message = await this.pollingClient.getMessage();
       const isDue = message.length && parseInt(message[1]) <= Date.now();
       if (isDue) {
         const item = JSON.parse(message[0]);
-        console.log('PARSED: ', item);
-        const wasLocked = await redis.lock(item.identifier);
-        console.log('wasLocked: ', wasLocked);
+        const wasLocked = await this.pollingClient.lock(item.identifier);
         if (wasLocked) {
-          const wasDeleted = await redis.removeMessage(message[0]);
+          const wasDeleted = await this.pollingClient.removeMessage(message[0]);
           if (wasDeleted) {
-            // pushToQueue
-            await redis.postDelayedMessage({
+            await this.pollingClient.postDelayedMessage({
               message: item.message,
               time: message[1],
             });
           }
+          await this.pollingClient.releaseLock(item.identifier);
         }
-
-        // try catch finally remove message in any case
       }
 
-      // do work
       if (this.shouldPoll) {
-        this.poll(handler);
+        this.poll();
       }
     }, config.pollingIntervalMS);
   }
@@ -46,8 +59,9 @@ class MessageService {
     this.poll = false;
   }
   async postMessage({ time, message }) {
-    await redis.postDelayedMessage({ message, time });
+    console.log(`post message: ${message}:${time}`);
+    await this.pollingClient.postDelayedMessage({ message, time });
   }
 }
 
-module.exports = new MessageService();
+module.exports = { MessageService };
