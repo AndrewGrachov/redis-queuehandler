@@ -1,6 +1,6 @@
-# moonactive
+# Redis queuehandler
 
-Test assignment for moonactive
+A fun test assignment
 
 # Install
 
@@ -20,7 +20,7 @@ npm start
 npm test
 ```
 
-# E2E test
+# E2E test (also an example)
 
 ```
 ./cluster.sh
