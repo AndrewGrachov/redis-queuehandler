@@ -1,6 +1,4 @@
-const { v4: uuidv4 } = require('uuid');
-
-function generate(count) {
+function generate (count) {
   const delay = 1 * 400 + Math.floor(Math.random() * 100);
   console.log('delay', delay);
   const startPoint = Date.now() + delay;
@@ -8,12 +6,13 @@ function generate(count) {
   for (let i = 0; i < count; i++) {
     payload.push({
       message: `random_message_${i}`,
-      time: startPoint + i * 1,
+      time: startPoint + i * 1
     });
+    console.log('date: ', new Date(startPoint + i * 1));
   }
   return payload;
 }
 
 module.exports = {
-  generate,
+  generate
 };

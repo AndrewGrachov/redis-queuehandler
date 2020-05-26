@@ -19,3 +19,10 @@ npm start
 ```
 npm test
 ```
+
+# E2E test
+
+```
+./cluster.sh
+node test-e2e.js
+```

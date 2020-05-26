@@ -10,10 +10,9 @@ app.use(bodyParser());
 app.use(async (ctx) => {
   const {
     method,
-    request: { path },
+    request: { path }
   } = ctx;
   if (method === 'POST' && path === '/echoAtTime') {
-    console.log('handle!!');
     const { time, message } = ctx.request.body;
     await messageService.postMessage({ time, message });
 

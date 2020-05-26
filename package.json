@@ -1,10 +1,14 @@
 {
-  "name": "moonactive",
+  "name": "redis-queuehandler",
   "version": "0.0.0",
   "description": "A test assignment",
+  "engines": {
+    "node": ">=12"
+  },
   "scripts": {
     "start": "nodemon ./src/server.js",
-    "test": "mocha --exit"
+    "test": "npm run lint && mocha --exit",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -19,6 +23,7 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "config": "^3.3.1",
+    "eslint-plugin-mocha": "^7.0.0",
     "koa": "^2.12.0",
     "koa-bodyparser": "^4.3.0",
     "redis": "^3.0.2",
@@ -26,6 +31,12 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "eslint": "^7.1.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "mocha": "^7.2.0",
     "node-fetch": "^2.6.0",
     "nodemon": "^2.0.4"
