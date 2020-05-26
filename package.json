@@ -23,7 +23,6 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "config": "^3.3.1",
-    "eslint-plugin-mocha": "^7.0.0",
     "koa": "^2.12.0",
     "koa-bodyparser": "^4.3.0",
     "redis": "^3.0.2",
@@ -34,6 +33,7 @@
     "eslint": "^7.1.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-mocha": "^7.0.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
